@@ -1,0 +1,14 @@
+bucket = {
+  "name": "Bucket",
+  "locked-description": "In order to sell dirt effectively you need to be able to transport it. Arrange for a bucket supplier.",
+  "unlocked-description": "Buckets can hold 20 liters of dirt",
+  "effects": {
+    "capacity": "20 liters",
+    "upkeepCost": "4",
+    "initialCost": "50"
+  },
+  "conditions": {
+    "money": 500,
+    "totalDirtSold": 1000
+  }
+}

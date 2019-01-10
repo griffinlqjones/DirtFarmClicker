@@ -1,0 +1,54 @@
+- The things will be built in JavaScript or whatever.
+- Node.js
+- Express.js (node module?)
+- Test main module with mocha/chai
+
+Some facts:
+- 1 second (real time) = 1 minute (game time) and so on.
+- There is a day and night cycle
+
+Dirt Farm initial setup:
+- 5m x 5m Farm
+- 1 unit of reagronomized dirt per second
+- 10 units of reagronomized dirt per click
+- $100 investment from your really nice grandma
+- your family compost heap (for nutrient mush supply)
+- dirt quality: 1 (regular dirt quality is 0)
+
+- going rate for good dirt: $10/gram
+
+Dirt Farm benchmarks of success:
+-
+- Environmental equilibrium achieved: you win
+- All humans dead! Problem solved? Vacuously true.
+
+Dirt Farm upgrades:
+- Nutrient mush supply:
+  - other compost heaps
+  - corpses of pets
+  - corpses of people
+- Dumb Farm:
+  - neighborhood kid labor ($2/hr, nGoodDirt/hr (you are immoral but effective))
+  -
+- Smart Farm:
+  - automated tiller
+  - climate controlled greenhouse
+
+- Different sized packaging means you can only sell dirt in specified quantities
+- Container price(to customer) based on contents
+- Container price(to self) a flat rate (have to pay for the container and the shipping)
+
+Equation for selling:
+profit = (dirtUnitPrice * containerVolume) - shippingCost;
+
+larger containers cost more, but the cost per unit of dirt is ultimately less expensive.
+
+box 10 units of dirt, unitPriceOfDirt = $1, shippingCost = $3 (unless you get a better deal)
+10 u of dirt * $1 per unit = $10 - $3 shipping = $profit
+
+Shipping quantities:
+  - box:
+  - bucket:
+  - coffin:
+  - big box:
+  - shipping container:

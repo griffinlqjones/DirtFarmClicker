@@ -1,0 +1,15 @@
+childLabor = {
+  "name": "Cheap Neighborhood Kid Labor",
+  "locked-description": "Your business model has proven successful enough to buy your friends drinks once in a while. But to expand you're going to need some extra hands, attached to people. Preferably cheap ones. What's your stance on child labor?",
+  "unlocked-description": "You have recruited the neighborhood kids to work on your dirt farm for a mere pittance. You're immoral but don't let anyone tell you you're not effective",
+  "effects": {
+    "passiveProductionRate": "+ 1",
+    "upkeepCost": "+ 2/hr"
+  },
+  "conditions": {
+    "money": 500,
+    "totalDirtSold": 1000
+  },
+  "unlocked": "false",
+  "purchased": "false"
+}
