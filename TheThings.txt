@@ -33,6 +33,7 @@ Dirt Farm upgrades:
 - Smart Farm:
   - automated tiller
   - climate controlled greenhouse
+- Increased Dirt Quality (unit price increased)
 
 - Different sized packaging means you can only sell dirt in specified quantities
 - Container price(to customer) based on contents

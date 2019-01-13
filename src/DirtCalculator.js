@@ -1,7 +1,10 @@
 export const DirtCalculator = function() {
-  this.dirtPerSqrMeter = function(size, rate) {
-    return size * rate;
-  };
+  // this.compare = function(dirt, maxDirt) {
+  //   return "COMPARE HAPPENED";
+  // };
+  // this.dirtPerSqrMeter = function(size, rate) {
+  //   return size * rate;
+  // };
 
   this.litersToMeters = function(liters) {
     // 1 liter == 0.001 meters

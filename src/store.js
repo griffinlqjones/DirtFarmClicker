@@ -1,137 +1,275 @@
+"use strict";
+
 import Vue from "vue";
 import Vuex from "vuex";
 // import math from "mathjs";
-// import containers from "./assets/game-objects/containers/containers.js";
+import upgrades from "./assets/game-objects/upgrades.js";
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    morality: 0,
     timer: null,
     timerRunning: false,
-
     /* property size represents total square meters */
-    propertySize: 10,
-    /* dirt rate represents amount of dirt per square meter in cubed meters.
-      passiveDirtRate of 0.1 represents 0.1m^3 per m^2 of property size.
-    */
-    passiveDirtRate: 0.1,
+    maxGoodDirt: 30,
+    /* dirt rate represents amount of dirt per square meter in cubed meters. passiveDirtRate of 0.1 represents 0.1m^3 per m^2 of property size.*/
+    passiveDirtRate: 0,
     clickedDirtRate: 1,
-    // Per unit of dirt
-    dirtPrice: 1,
+    laborCost: 0,
+    dirtUnitPrice: 1,
     money: 100,
-    goodDirt: 0,
-    employees: [
-      {
-        type: "Child",
-        wage: "2",
-        dailyHours: "4"
-      },
-      {
-        type: "Smelly Teenager",
-        wage: "8",
-        dailyHours: "6"
-      },
-    ],
-    shippingContainers: [
-      {
-        name: "Small Box",
-        capacity: 10,
-        shippingCost: 1
-      },
-      {
-        name: "Bucket",
-        capacity: 20,
-        shippingCost: 2
-      },
-      {
-        name: "Coffin",
-        capacity: 800,
-        shippingCost: 50
-      },
-      {
-        name: "Quite A Large Box",
-        capacity: 1000,
-        shippingCost: 75
-      },
-      {
-        name: "Shipping Crate",
-        capacity: 7500,
-        shippingCost: 150
-      },
-      {
-        name: "20ft Ventilated Shipping Container",
-        capacity: 33200,
-        shippingCost: 2300
-      }
-    ],
-    upgradesOwned: [],
-    /* Upgrades is the list of upgrades available */
-    upgradesAvailable: [
-      {
-        name: "Slave labor",
-        description: "Make your peasants peas.",
-        price: 25
-      },
-      {
-        name: "Slave labor 2",
-        description: "Electric Boogaloo.",
-        price: 230
-      }
-    ]
+    goodDirt: 30,
+    upgrades: upgrades
   },
 
   mutations: {
-    // updateShippingMenu(state) {
-    //   state.shippingContainers = containers.list;
-    // },
     incrementClicked(state) {
-      state.goodDirt += state.clickedDirtRate;
-    },
-    updateOnTick(state) {
-      /* This will probably need to handle a lot of stuff.
-        - work shifts
-        - daytime hours
-      */
-      // eventually will need to both update dirt and account for paying employees hourly during the x hours they work each day.
-      state.goodDirt += state.passiveDirtRate;
-    },
-    buyUpgrade(state, item) {
-      if (state.money >= item.price) {
-        state.money -= item.price;
-        /* This is where adding the upgrade to farmer inventory will need to happen */
-
-      } else {
-        console.log("You don't have enough cubic dollars to buy that.");
+      if (state.goodDirt < state.maxGoodDirt) {
+        /* If adding dirt would result in more dirt than property size, just set good dirt to state.maxGoodDirt * 3 */
+        if (state.goodDirt + state.clickedDirtRate > state.maxGoodDirt) {
+          state.goodDirt = state.maxGoodDirt;
+        } else {
+          state.goodDirt += state.clickedDirtRate;
+        }
       }
     },
+
+    updatePassiveDirtRate(state, payload) {
+      state.passiveDirtRate = payload;
+    },
+    updateLaborCost(state, payload) {
+      state.laborCost = payload;
+    },
+    // Apply the moral toll
+    updateMorality(state, payload) {
+      state.morality = payload;
+    },
+    updateDirtUnitPrice(state, payload) {
+      state.dirtUnitPrice = payload;
+    },
+    updateMaxDirt(state, payload) {
+      state.maxGoodDirt = payload;
+    },
+
+    updateOnTick(state) {
+      /* This will probably need to handle a lot of stuff.
+      - work shifts
+      - daytime hours
+      */
+      // eventually will need to both update dirt and account for paying employees hourly during the x hours they work each day.
+      if (state.money > state.laborCost) {
+        state.money -= state.laborCost;
+        if (state.goodDirt < state.maxGoodDirt) {
+          /* If adding dirt would result in more dirt than property size, just set good dirt to state.maxGoodDirt * 3 */
+          if (state.goodDirt + state.passiveDirtRate > state.maxGoodDirt) {
+            state.goodDirt = state.maxGoodDirt;
+          } else {
+            state.goodDirt += state.passiveDirtRate;
+          }
+        }
+      } else {
+
+      }
+    },
+
+    unlockUpgrades(state, payload) {
+      payload.map(function(upgrade) {
+        return upgrade.available = true;
+      });
+    },
+
+    buyUpgrade(state, payload) {
+      if (state[payload.acquisitionCurrency] >= payload.aquisitionCost) {
+        // Set upgrade to owned and unavailable
+        payload.owned = true;
+        payload.count += 1;
+        if(!payload.repurchaseable) {
+          payload.available = false;
+        }
+        // Deduct cost from inventory
+        state[payload.acquisitionCurrency] -= payload.aquisitionCost;
+        /* This is where adding the upgrade to farmer inventory will need to happen */
+      } else {
+        console.log("You don't have enough currency to buy that.");
+      }
+    },
+
     // Purchase price is by volume or container?
-    sellDirt(state, container) {
-      if (container.capacity <= state.goodDirt) {
-        state.goodDirt -= container.capacity;
-        state.money += container.capacity * state.dirtPrice;
+    sellDirt(state, payload) {
+      if (payload.capacity <= state.goodDirt) {
+        state.goodDirt -= payload.capacity;
+        state.money += payload.capacity * state.dirtUnitPrice;
       } else {
         console.log("You don't have enough good dirt to fill that order.");
       }
     },
+
+    setTimer(state, timerID) {
+      state.timer = timerID;
+      state.timerRunning = true;
+    },
+
     stopTimer(state) {
-      clearInterval(this.timer);
+      console.log(state.timer);
+      clearInterval(state.timer);
+      state.timer = null;
       state.timerRunning = false;
-    }
+    },
+
+    testCondition(state, obj) {
+      console.log("Test Condition Mutation: ");
+      if (obj.condition(state)) {
+        console.log("The condition is: " + obj.condition(state));
+      }
+    },
   },
 
   actions: {
+    testCondition(context, obj) {
+      context.commit("testCondition", obj);
+    },
+    /*
+    To save the keystrokes involved in writing specific actions for each mutation, consider this generic dispatch action which uses the payload of a normal dispatch call to hold an oject of the form:
+    mutation: "nameOfMutation",
+    payload: whatever you were going to pass to the mutation as a payload
+    Yes, yes, very smart. I know. Thank you thank you.
+    */
+    genericDispatch(context, obj) {
+      context.commit(obj.mutation, obj.payload);
+    },
+
+    updateAll(context) {
+      context.commit("updatePassiveDirtRate", context.getters.dirtProductionPerTick);
+      context.commit("updateLaborCost", context.getters.laborCostPerTick);
+      context.commit("updateMorality", context.getters.getMorality);
+      context.commit("updateDirtUnitPrice", context.getters.genericFilteredGetter("dirtQuality", "value", "dirtUnitPrice"));
+      context.commit("updateMaxDirt", context.getters.genericFilteredGetter("propertyExpansion", "capacity", "maxGoodDirt"));
+    },
+
+    /* object holds the container and the calculated profit */
+    sellDirt(context, obj) {
+      context.commit("sellDirt", obj);
+    },
+
+    buyUpgrade(context, obj) {
+      context.commit("buyUpgrade", obj);
+      context.dispatch("updateAll");
+    },
+
+    /* Sets an interval (only 1) representing the PASSAGE OF TIME. */
     startTimer(context) {
-      if (!context.timerRunning) {
+      if (!context.state.timerRunning) {
         // Timer is running
-        context.timerRunning = true;
-        // context.commit("updateShippingMenu");
-        context.timer = setInterval(() => {
+        let timer = setInterval(() => {
           context.commit("updateOnTick");
+          context.dispatch("checkForUnlockableUpgrades");
         }, 1000);
+        context.commit("setTimer", timer);
       } else {
         console.log("Timer already started.");
       }
+    },
+
+    // Check for upgrades whose unlock condition has been met and mark them "available"
+    checkForUnlockableUpgrades(context) {
+      let upgrades = context.getters.lockedUpgrades();
+      if (upgrades.length > 0) {
+        context.commit("unlockUpgrades", upgrades);
+      }
+    }
+  },
+
+  getters: {
+    calcProfit: (state) => (container) => {
+      return container.capacity * state.dirtUnitPrice - container.shippingCost;
+    },
+
+    /* Write a generic function to check if adding x money or dirt would exceed the threshold and return a bool */
+    getMorality: (state, getters) => {
+      return getters.ownedUpgrades.reduce(function (accumulator, upgrade) {
+        return upgrade.morality * upgrade.count + accumulator;
+      }, 0);
+    },
+
+    laborCostPerTick: (state, getters) => {
+      return getters.hiredStaff.reduce(function (accumulator, employee) {
+        return employee.intervalCost * employee.count + accumulator;
+      }, 0);
+    },
+
+    /* This works, so something is wrong with the action calling it I guess? */
+    dirtProductionPerTick: (state, getters) => {
+      return getters.hiredStaff.reduce(function (accumulator, employee) {
+        return employee.value * employee.count + accumulator;
+      }, 0);
+    },
+
+    /*
+    The problem is that dirtUnitPrice and maxGoodDirt start with non-zero values
+    so they need to have the total of the upgrade modifiers ADDED to them
+    Unfortunately it stacks all kinds of things.
+    If dirt unit price stays normal if you recruit child labor,
+    But after you purchase an upgrade that increases dirt price EVERY upgrade increases dirt price.
+    FIX IT.
+    */
+    genericFilteredGetter: (state, getters) => (upgradeType, reduceProp, defaultProp) => {
+      let filteredUpgrades = getters.ownedUpgrades.filter(
+        upgrade => upgrade.type == upgradeType
+      );
+      if (filteredUpgrades.length > 0) {
+        return filteredUpgrades.reduce(function (accumulator, upgrade) {
+          return upgrade[reduceProp] * upgrade.count + accumulator;
+        }, 0) + state[defaultProp];
+      }
+      else {
+        return state[defaultProp];
+      }
+    },
+
+    shippingContainers: (state, getters) => {
+      let filteredUpgrades = getters.ownedUpgrades;
+      return filteredUpgrades.filter(
+        upgrade => upgrade.type == "shippingContainer"
+      );
+    },
+
+    hiredStaff: (state, getters) => {
+      let filteredUpgrades = getters.ownedUpgrades;
+      return filteredUpgrades.filter(
+        upgrade => upgrade.type == "staff"
+      );
+    },
+
+    /* To ensure this function actually runs each time it's invoked,
+    we've got to do the double arrow thing. */
+    lockedUpgrades: (state, getters) => () => {
+      let upgrades = getters.upgradesNotOwnedOrAvailable;
+      upgrades = upgrades.filter(
+        upgrade => upgrade.condition(state) == true
+      );
+      return upgrades;
+    },
+
+    upgradesNotOwnedOrAvailable: state => {
+      return state.upgrades.filter(
+        upgrade => !upgrade.owned && !upgrade.available
+      );
+    },
+
+    // Upgrades available for purchase in the upgrade panel
+    availableUpgrades: state => {
+      return state.upgrades.filter(
+        upgrade => upgrade.available
+      );
+    },
+
+    // Upgrades purchased by the player
+    ownedUpgrades: state => {
+      return state.upgrades.filter(
+        upgrade => upgrade.owned
+      );
     }
   }
 });

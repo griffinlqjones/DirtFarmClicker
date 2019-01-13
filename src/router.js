@@ -14,10 +14,10 @@ export default new Router({
       component: DirtFarm
     },
     {
-      path: "/home",
-      name: "home",
+      path: "/inventory",
+      name: "inventory",
       component: () =>
-        import(/* webpackChunkName: "about" */ "./views/Home.vue")
+        import(/* webpackChunkName: "about" */ "./views/Inventory.vue")
     },
     {
       path: "/victory",

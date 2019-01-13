@@ -5,9 +5,13 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 export default {
   name: "ClickSpace",
   methods: {
+    ...mapActions([
+          "incrementClicked"
+        ]),
     clicked() {
       this.$store.commit("incrementClicked");
     }
@@ -21,21 +25,25 @@ export default {
 
 #click-space {
   margin: auto;
-  width: 200px;
+  width: 100%;
   height: 200px;
   border: 4px solid black;
   background-color: @dirtColor;
   background-image: url("../assets/imgs/DirtTexture.png");
   background-repeat: repeat;
-  background-size: 200px 200px;
+  background-size: 150px 150px;
   background-position: center;
   color: white;
-}
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-h4 {
-  -webkit-user-select: none; /* Safari */
-  -moz-user-select: none; /* Firefox */
-  -ms-user-select: none; /* IE10+/Edge */
-  user-select: none; /* Standard */
+  h4 {
+    font-size: 40px;
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+/Edge */
+    user-select: none; /* Standard */
+  }
 }
 </style>

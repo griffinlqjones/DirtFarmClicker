@@ -1,11 +1,28 @@
 <template>
   <div id="hud">
-    <p>Money: {{ money }} cubic dollars</p>
-    <p>Good Dirt: {{ goodDirt }} cubic meters</p>
-    <p>Property Size: {{ propertySize }} square units of collective surface dirt</p>
-    <button type="button" name="button" @click="startTime">Start</button>
-    <button type="button" name="button" @click="stopTime">Stop</button>
-    <!-- <button type="button" name="button" @click="sell">Sell a bucket of dirt (20 liters)</button> -->
+    <h2 class="section-heading">HUD</h2>
+    <div class="stats">
+      <div class="currency">
+        <p>Money: {{ money }} Currency</p>
+        <p>Good Dirt: {{ goodDirt }} / {{ maxGoodDirt }} m<sup>3</sup></p>
+        <p>Staff Cost: {{ laborCost }} money per hour</p>
+        <p>Dirt Production: {{ passiveDirtRate }} dirt per hour</p>
+        <p>Dirt Unit Price: {{ dirtUnitPrice }} money</p>
+        <p>Morality: {{ morality }} thetans</p>
+      </div>
+      <div class="staff" v-if="hiredStaff.length > 0">
+        <h3>Employees:</h3>
+        <ul>
+          <li v-for="(employee, index) in hiredStaff" :key="index">{{employee.name}}: {{employee.count}}</li>
+        </ul>
+      </div>
+    </div>
+    <div class="actions">
+      <button type="button" name="button" @click="startTime">Start</button>
+      <button type="button" name="button" @click="stopTime">Stop</button>
+      <button type="button" name="button" @click="unlockables">Check for unlocked things</button>
+    </div>
+    <!-- <button type="button" name="button" @click="test">Test</button> -->
     <!-- <button type="button" name="button" @click="buy">Buy a thing ($20)</button> -->
     <Container/>
   </div>
@@ -14,6 +31,8 @@
 
 <script>
 import { mapState } from "vuex";
+import { mapActions } from "vuex";
+import { mapGetters } from "vuex";
 import Container from "@/components/Container.vue";
 
 export default {
@@ -22,21 +41,40 @@ export default {
     return {};
   },
   methods: {
+    ...mapActions([
+      "startTimer",
+      "genericDispatch",
+      "checkForUnlockableUpgrades"
+    ]),
     startTime() {
-      this.$store.dispatch("startTimer");
+      this.startTimer();
     },
     stopTime() {
-      this.$store.commit("stopTimer");
+      this.genericDispatch({
+        mutation: "stopTimer",
+        payload: null
+      });
     },
-    // sell() {
-    //   this.$store.commit("sellDirt", 20);
-    // },
-    buy() {
-      this.$store.commit("buyStuff", 20);
+    unlockables() {
+      this.checkForUnlockableUpgrades();
     }
   },
   computed: {
-    ...mapState(["money", "goodDirt", "propertySize"])
+    ...mapState([
+      "dirtUnitPrice",
+      "morality",
+      "laborCost",
+      "money",
+      "goodDirt",
+      "maxGoodDirt",
+      "passiveDirtRate"
+    ]),
+    ...mapGetters([
+      "hiredStaff",
+      "laborCostPerTick",
+      "dirtProductionPerTick",
+      "getMorality"
+    ])
   },
   components: {
     Container
@@ -48,12 +86,35 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="less">
 #hud {
-  border: 1px solid grey;
-  // background-color: #ece3bc;
   width: 100%;
-  // height: 200px;
-  // display: flex;
-  // flex-wrap: wrap;
+  text-align: center;
+  border: 1px solid grey;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+
+  .section-heading {
+    margin: 0;
+  }
+}
+.stats,
+.actions {
+  width: 100%;
+  display: flex;
+}
+
+.currency,
+.staff {
+  flex-grow: 1;
+  text-align: left;
+}
+
+ol {
+  padding-inline-start: 20px;
+}
+
+li {
+  list-style: none;
 }
 
 p {

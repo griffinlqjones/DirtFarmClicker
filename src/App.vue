@@ -3,7 +3,7 @@
     <h1>Dirt Farm</h1>
     <div id="nav">
       <router-link to="/">Dirt Farm</router-link> |
-      <router-link to="/home">Home</router-link> |
+      <router-link to="/inventory">Inventory</router-link> |
       <router-link to="/victory">Victory</router-link>
     </div>
     <router-view/>
@@ -14,7 +14,8 @@
 * {
   box-sizing: border-box;
 }
-html, body {
+html,
+body {
   background-color: #200707;
 }
 #app {
@@ -25,10 +26,24 @@ html, body {
   color: #2c3e50;
   background-color: #200707;
   color: white;
+
+  .section-heading,
+  .section-subheading {
+    text-align: center;
+    width: 100%;
+  }
+}
+
+.stat {
+  font-weight: bolder;
+}
+
+h1 {
+  margin: 10px;
 }
 
 #nav {
-  padding: 30px;
+  padding: 15px;
   a {
     font-weight: bold;
     color: #587ea4;
