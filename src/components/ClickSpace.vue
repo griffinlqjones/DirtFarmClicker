@@ -1,7 +1,7 @@
 <template>
-  <div id="click-space" @click="clicked">
+  <button id="click-space" @click="clicked">
     <h4>Click to Farm Dirt!</h4>
-  </div>
+  </button>
 </template>
 
 <script>
@@ -9,9 +9,7 @@ import { mapActions } from "vuex";
 export default {
   name: "ClickSpace",
   methods: {
-    ...mapActions([
-          "incrementClicked"
-        ]),
+    ...mapActions(["incrementClicked"]),
     clicked() {
       this.$store.commit("incrementClicked");
     }
@@ -27,8 +25,8 @@ export default {
   margin: auto;
   width: 100%;
   height: 200px;
-  border: 4px solid black;
-  background-color: @dirtColor;
+  border: 4px solid @border-color;
+  background-color: @dirt-color;
   background-image: url("../assets/imgs/DirtTexture.png");
   background-repeat: repeat;
   background-size: 150px 150px;
@@ -37,6 +35,14 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+
+  &:active {
+    border-color: lighten(@border-color, 10%);
+    box-shadow: inset 0 0 15px;
+    h4 {
+      text-shadow: 0px 0px 60px black;
+    }
+  }
 
   h4 {
     font-size: 40px;

@@ -45,15 +45,17 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["availableUpgrades"]),
+    ...mapGetters(["availableUpgrades"])
   }
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" scoped>
+@import "../variables.less";
+
 #upgrades-panel {
-  border: 1px solid grey;
+  border: 1px solid @border-color;
   width: 100%;
   display: flex;
   overflow: hidden;
@@ -61,15 +63,12 @@ export default {
 }
 
 .upgrade-card {
-  background-color: #98370d;
-  border: 1px solid black;
-  width: 25%;
+  max-width: 50%;
   padding: 8px;
 }
 
 .description {
-  color: black;
-  background-color: #faf9cf;
+  // background-color: #faf9cf;
 }
 
 h2,
@@ -85,8 +84,8 @@ p {
   user-select: none;
   margin-bottom: 0.5rem;
 }
+
 p {
   padding: 3px;
 }
-
 </style>

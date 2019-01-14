@@ -13,7 +13,12 @@
       <div class="staff" v-if="hiredStaff.length > 0">
         <h3>Employees:</h3>
         <ul>
-          <li v-for="(employee, index) in hiredStaff" :key="index">{{employee.name}}: {{employee.count}}</li>
+          <li v-for="(employee, index) in hiredStaff" :key="index">
+            <p class="stat">{{employee.name}}: {{employee.count}}</p>
+            <button class="remove-button" @click="dismissEmployee(employee)">
+              Dismiss 1
+            </button>
+          </li>
         </ul>
       </div>
     </div>
@@ -44,7 +49,8 @@ export default {
     ...mapActions([
       "startTimer",
       "genericDispatch",
-      "checkForUnlockableUpgrades"
+      "checkForUnlockableUpgrades",
+      "reduceCount"
     ]),
     startTime() {
       this.startTimer();
@@ -57,6 +63,9 @@ export default {
     },
     unlockables() {
       this.checkForUnlockableUpgrades();
+    },
+    dismissEmployee(employee) {
+      this.reduceCount(employee);
     }
   },
   computed: {
@@ -85,13 +94,16 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="less">
+@import "../variables.less";
+
 #hud {
   width: 100%;
   text-align: center;
-  border: 1px solid grey;
-  width: 100%;
+  border: 1px solid @border-color;
+  border-radius: 5px;
   display: flex;
   flex-wrap: wrap;
+  overflow: hidden;
 
   .section-heading {
     margin: 0;
@@ -107,6 +119,15 @@ export default {
 .staff {
   flex-grow: 1;
   text-align: left;
+
+  .remove-button {
+    white-space: nowrap;
+    padding: 2px;
+    width: min-content;
+    border-radius: 5px;
+    background-color: @destructive-red;
+    color: #ffffff;
+  }
 }
 
 ol {
@@ -118,6 +139,7 @@ li {
 }
 
 p {
+  margin: 0;
   text-align: left;
   width: 100%;
   -webkit-user-select: none;

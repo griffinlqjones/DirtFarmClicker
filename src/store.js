@@ -4,23 +4,25 @@ import Vue from "vue";
 import Vuex from "vuex";
 // import math from "mathjs";
 import upgrades from "./assets/game-objects/upgrades.js";
+import initializer from "./assets/initializer.js";
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    morality: 0,
-    timer: null,
-    timerRunning: false,
+    baseValues: initializer,
+    morality: initializer.morality,
+    timer: initializer.timer,
+    timerRunning: initializer.timerRunning,
     /* property size represents total square meters */
-    maxGoodDirt: 30,
+    maxGoodDirt: initializer.maxGoodDirt,
     /* dirt rate represents amount of dirt per square meter in cubed meters. passiveDirtRate of 0.1 represents 0.1m^3 per m^2 of property size.*/
-    passiveDirtRate: 0,
-    clickedDirtRate: 1,
-    laborCost: 0,
-    dirtUnitPrice: 1,
-    money: 100,
-    goodDirt: 30,
+    passiveDirtRate: initializer.passiveDirtRate,
+    clickedDirtRate: initializer.clickedDirtRate,
+    laborCost: initializer.laborCost,
+    dirtUnitPrice: initializer.dirtUnitPrice,
+    money: initializer.money,
+    goodDirt: initializer.goodDirt,
     upgrades: upgrades
   },
 
@@ -58,11 +60,11 @@ export default new Vuex.Store({
       - work shifts
       - daytime hours
       */
-      // eventually will need to both update dirt and account for paying employees hourly during the x hours they work each day.
+      /* If you have less money th */
       if (state.money > state.laborCost) {
-        state.money -= state.laborCost;
         if (state.goodDirt < state.maxGoodDirt) {
           /* If adding dirt would result in more dirt than property size, just set good dirt to state.maxGoodDirt * 3 */
+          state.money -= state.laborCost;
           if (state.goodDirt + state.passiveDirtRate > state.maxGoodDirt) {
             state.goodDirt = state.maxGoodDirt;
           } else {
@@ -70,13 +72,13 @@ export default new Vuex.Store({
           }
         }
       } else {
-
+        console.log("You can't afford to pay your employees.");
       }
     },
 
     unlockUpgrades(state, payload) {
       payload.map(function(upgrade) {
-        return upgrade.available = true;
+        return (upgrade.available = true);
       });
     },
 
@@ -85,7 +87,7 @@ export default new Vuex.Store({
         // Set upgrade to owned and unavailable
         payload.owned = true;
         payload.count += 1;
-        if(!payload.repurchaseable) {
+        if (!payload.repurchaseable) {
           payload.available = false;
         }
         // Deduct cost from inventory
@@ -93,6 +95,12 @@ export default new Vuex.Store({
         /* This is where adding the upgrade to farmer inventory will need to happen */
       } else {
         console.log("You don't have enough currency to buy that.");
+      }
+    },
+
+    reduceCount(state, upgrade) {
+      if (upgrade.count > 0) {
+        upgrade.count--;
       }
     },
 
@@ -123,7 +131,7 @@ export default new Vuex.Store({
       if (obj.condition(state)) {
         console.log("The condition is: " + obj.condition(state));
       }
-    },
+    }
   },
 
   actions: {
@@ -141,11 +149,28 @@ export default new Vuex.Store({
     },
 
     updateAll(context) {
-      context.commit("updatePassiveDirtRate", context.getters.dirtProductionPerTick);
+      context.commit(
+        "updatePassiveDirtRate",
+        context.getters.dirtProductionPerTick
+      );
       context.commit("updateLaborCost", context.getters.laborCostPerTick);
       context.commit("updateMorality", context.getters.getMorality);
-      context.commit("updateDirtUnitPrice", context.getters.genericFilteredGetter("dirtQuality", "value", "dirtUnitPrice"));
-      context.commit("updateMaxDirt", context.getters.genericFilteredGetter("propertyExpansion", "capacity", "maxGoodDirt"));
+      context.commit(
+        "updateDirtUnitPrice",
+        context.getters.genericFilteredGetter(
+          "dirtQuality",
+          "value",
+          "dirtUnitPrice"
+        )
+      );
+      context.commit(
+        "updateMaxDirt",
+        context.getters.genericFilteredGetter(
+          "propertyExpansion",
+          "capacity",
+          "maxGoodDirt"
+        )
+      );
     },
 
     /* object holds the container and the calculated profit */
@@ -153,8 +178,13 @@ export default new Vuex.Store({
       context.commit("sellDirt", obj);
     },
 
-    buyUpgrade(context, obj) {
-      context.commit("buyUpgrade", obj);
+    buyUpgrade(context, upgrade) {
+      context.commit("buyUpgrade", upgrade);
+      context.dispatch("updateAll");
+    },
+
+    reduceCount(context, upgrade) {
+      context.commit("reduceCount", upgrade);
       context.dispatch("updateAll");
     },
 
@@ -182,26 +212,26 @@ export default new Vuex.Store({
   },
 
   getters: {
-    calcProfit: (state) => (container) => {
-      return container.capacity * state.dirtUnitPrice - container.shippingCost;
+    calcProfit: state => container => {
+      return container.capacity * state.dirtUnitPrice - container.intervalCost;
     },
 
     /* Write a generic function to check if adding x money or dirt would exceed the threshold and return a bool */
     getMorality: (state, getters) => {
-      return getters.ownedUpgrades.reduce(function (accumulator, upgrade) {
+      return getters.ownedUpgrades.reduce(function(accumulator, upgrade) {
         return upgrade.morality * upgrade.count + accumulator;
       }, 0);
     },
 
     laborCostPerTick: (state, getters) => {
-      return getters.hiredStaff.reduce(function (accumulator, employee) {
+      return getters.hiredStaff.reduce(function(accumulator, employee) {
         return employee.intervalCost * employee.count + accumulator;
       }, 0);
     },
 
     /* This works, so something is wrong with the action calling it I guess? */
     dirtProductionPerTick: (state, getters) => {
-      return getters.hiredStaff.reduce(function (accumulator, employee) {
+      return getters.hiredStaff.reduce(function(accumulator, employee) {
         return employee.value * employee.count + accumulator;
       }, 0);
     },
@@ -210,20 +240,29 @@ export default new Vuex.Store({
     The problem is that dirtUnitPrice and maxGoodDirt start with non-zero values
     so they need to have the total of the upgrade modifiers ADDED to them
     Unfortunately it stacks all kinds of things.
-    If dirt unit price stays normal if you recruit child labor,
+    Dirt unit price stays normal if you recruit child labor,
     But after you purchase an upgrade that increases dirt price EVERY upgrade increases dirt price.
     FIX IT.
     */
-    genericFilteredGetter: (state, getters) => (upgradeType, reduceProp, defaultProp) => {
+    genericFilteredGetter: (state, getters) => (
+      upgradeType,
+      reduceProp,
+      defaultProp
+    ) => {
       let filteredUpgrades = getters.ownedUpgrades.filter(
         upgrade => upgrade.type == upgradeType
       );
       if (filteredUpgrades.length > 0) {
-        return filteredUpgrades.reduce(function (accumulator, upgrade) {
+        filteredUpgrades = filteredUpgrades.reduce(function(
+          accumulator,
+          upgrade
+        ) {
           return upgrade[reduceProp] * upgrade.count + accumulator;
-        }, 0) + state[defaultProp];
-      }
-      else {
+        },
+        0);
+        /* I want to say, just for the record, that ESLint thought the formatting you're seeing here was a good idea. */
+        return filteredUpgrades + state.baseValues[defaultProp];
+      } else {
         return state[defaultProp];
       }
     },
@@ -237,18 +276,14 @@ export default new Vuex.Store({
 
     hiredStaff: (state, getters) => {
       let filteredUpgrades = getters.ownedUpgrades;
-      return filteredUpgrades.filter(
-        upgrade => upgrade.type == "staff"
-      );
+      return filteredUpgrades.filter(upgrade => upgrade.type == "staff");
     },
 
     /* To ensure this function actually runs each time it's invoked,
     we've got to do the double arrow thing. */
     lockedUpgrades: (state, getters) => () => {
       let upgrades = getters.upgradesNotOwnedOrAvailable;
-      upgrades = upgrades.filter(
-        upgrade => upgrade.condition(state) == true
-      );
+      upgrades = upgrades.filter(upgrade => upgrade.condition(state) == true);
       return upgrades;
     },
 
@@ -260,16 +295,12 @@ export default new Vuex.Store({
 
     // Upgrades available for purchase in the upgrade panel
     availableUpgrades: state => {
-      return state.upgrades.filter(
-        upgrade => upgrade.available
-      );
+      return state.upgrades.filter(upgrade => upgrade.available);
     },
 
     // Upgrades purchased by the player
     ownedUpgrades: state => {
-      return state.upgrades.filter(
-        upgrade => upgrade.owned
-      );
+      return state.upgrades.filter(upgrade => upgrade.owned);
     }
   }
 });

@@ -276,7 +276,7 @@ let upgradeList = [
     value: 1,
     repurchaseable: false,
     condition: (state) => {
-      return state.morality < 0 ? true : false;
+      return state.morality < -10 ? true : false;
     },
     morality: 0
   },
@@ -295,7 +295,7 @@ let upgradeList = [
     value: 2,
     repurchaseable: false,
     condition: (state) => {
-      return state.morality < 0 ? true : false;
+      return state.maxGoodDirt > 1000 ? true : false;
     },
     morality: 50
   }

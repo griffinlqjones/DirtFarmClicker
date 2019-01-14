@@ -11,21 +11,23 @@
 </template>
 
 <style lang="less">
+@import "./variables.less";
+
 * {
   box-sizing: border-box;
 }
 html,
 body {
-  background-color: #200707;
+  background-color: @background-color;
 }
 #app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
+  // font-family: "Avenir", Helvetica, Arial, sans-serif;
+  font-family: @font-roboto;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
-  background-color: #200707;
-  color: white;
+  // background-color: @background-color;
+  color: @base-text-color;
 
   .section-heading,
   .section-subheading {

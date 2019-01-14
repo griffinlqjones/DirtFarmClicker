@@ -3,7 +3,7 @@
     <button class="container-card" v-for="(container, index) in shippingContainers" :key="index" @click="sellDirt(container)">
       <h3>{{container.name}}</h3>
       <p>-{{container.capacity}} Good Dirt</p>
-      <p>+{{container.capacity * dirtUnitPrice + container.value - container.intervalCost}} Currency</p>
+      <p>+{{container.capacity * dirtUnitPrice - container.intervalCost}} Currency</p>
     </button>
   </div>
 </template>
@@ -25,7 +25,7 @@ export default {
   },
   computed: {
     ...mapState(["dirtUnitPrice"]),
-    ...mapGetters(["calcProfit", "shippingContainers"])
+    ...mapGetters(["shippingContainers"])
   }
 };
 </script>
@@ -33,6 +33,8 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" scoped>
+@import "../variables.less";
+
 #containers-panel {
   width: 100%;
   display: flex;
@@ -43,6 +45,10 @@ export default {
   min-width: 20%;
   padding: 10px;
   margin: 5px;
+
+  // &:active {
+  //   // background-color: black;
+  // }
 
   h3,
   p {

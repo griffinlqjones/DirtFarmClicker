@@ -1,8 +1,8 @@
 <template>
   <div id="inventory">
-    <h2>Unlocked Upgrades</h2>
+    <h2>Acquired Upgrades</h2>
     <div class="upgrade-card" v-for="(upgrade, index) in ownedUpgrades" :key="index" @click="display(upgrade)">
-      <h3>{{upgrade.name}}</h3>
+      <h3>{{upgrade.name}} <span v-if="upgrade.repurchaseable">({{upgrade.count}})</span></h3>
       <p>{{upgrade.unlockedDescription}}</p>
       <template v-if="upgrade.type == 'shippingContainer'">
         <p><span class="stat">Shipping Cost:</span> {{upgrade.intervalCost}} cubic dollars per shipment</p>
@@ -11,7 +11,7 @@
       <template v-else-if="upgrade.type == 'staff'">
         <p><span class="stat">Wage:</span> {{upgrade.intervalCost}} money/hr</p>
         <!-- <p>Daily Hours: {{upgrade.capacity}}</p> -->
-        <p><span class="stat">Produces</span> {{upgrade.value}} per hour (stackable)</p>
+        <p><span class="stat">Produces:</span> {{upgrade.value}} per hour (stackable)</p>
       </template>
       <template v-else-if="upgrade.type == 'propertyExpansion'">
         <p><span class="stat">Maximum Dirt:</span> +{{ upgrade.capacity }}</p>
@@ -36,9 +36,9 @@ export default {
     return {};
   },
   methods: {
-    // Use this method to display full upgrade info
+    // Use display method to display full upgrade info
     display(item) {
-
+      console.log(item);
     }
   },
   computed: {
@@ -49,8 +49,10 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" scoped>
+@import "../variables.less";
+
 #inventory {
-  border: 1px solid grey;
+  border: 1px solid @border-color;
   width: 100%;
   display: flex;
   overflow: hidden;
@@ -58,12 +60,12 @@ export default {
 }
 
 .upgrade-card {
-  max-width: 20%;
+  // max-width: 20%;
   padding: 10px;
   margin: 5px;
-  background-color: #dbdbdb;
+  background-color: #beeeef;
   color: #01031f;
-  border: 4px solid black;
+  border: 4px solid @border-color;
 }
 
 h3 {
@@ -85,6 +87,4 @@ p {
 p {
   text-align: left;
 }
-
-
 </style>
