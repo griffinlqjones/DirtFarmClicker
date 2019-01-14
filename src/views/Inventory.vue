@@ -60,7 +60,6 @@ export default {
 }
 
 .upgrade-card {
-  // max-width: 20%;
   padding: 10px;
   margin: 5px;
   background-color: #beeeef;

@@ -1,7 +1,7 @@
 <template>
   <div id="upgrades-panel">
-    <h2 class="section-heading">Upgrade Panel</h2>
-    <p class="section-subheading">This is where you upgrade your dirt farm</p>
+    <h2 class="section-heading">Upgrades</h2>
+    <p class="section-subheading">This is where you buy stuff to upgrade your dirt farm</p>
     <!-- <UpgradeCard/> -->
     <button class="upgrade-card" v-for="(upgrade, index) in availableUpgrades" :key="index" @click="buy(upgrade)">
       <h3 class="section-heading">{{ upgrade.name }}</h3>

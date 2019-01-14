@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Router from "vue-router";
-import DirtFarm from "./views/DirtFarm.vue";
+import Menu from "./views/Menu.vue";
 
 Vue.use(Router);
 
@@ -10,23 +10,23 @@ export default new Router({
   routes: [
     {
       path: "/",
+      name: "menu",
+      component: Menu
+    },
+    {
+      path: "/dirt-farm",
       name: "dirt-farm",
-      component: DirtFarm
+      component: () =>
+        import(/* webpackChunkName: "about" */ "./views/DirtFarm.vue")
     },
     {
       path: "/inventory",
       name: "inventory",
-      component: () =>
-        import(/* webpackChunkName: "about" */ "./views/Inventory.vue")
-    },
-    {
-      path: "/victory",
-      name: "victory",
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () =>
-        import(/* webpackChunkName: "about" */ "./views/Victory.vue")
+        import(/* webpackChunkName: "about" */ "./views/Inventory.vue")
     }
   ]
 });

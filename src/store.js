@@ -145,7 +145,11 @@ export default new Vuex.Store({
     Yes, yes, very smart. I know. Thank you thank you.
     */
     genericDispatch(context, obj) {
-      context.commit(obj.mutation, obj.payload);
+      if (obj.payload == null) {
+        context.commit(obj.mutation);
+      } else {
+        context.commit(obj.mutation, obj.payload);
+      }
     },
 
     updateAll(context) {

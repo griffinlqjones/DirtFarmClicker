@@ -6,6 +6,8 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
+    "express": "vue-cli-service express:watch",
+    "express:run": "vue-cli-service express:run",
     "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
@@ -28,6 +30,7 @@
     "eslint-plugin-vue": "^5.0.0",
     "less": "^3.0.4",
     "less-loader": "^4.1.0",
+    "vue-cli-plugin-express": "0.0.4",
     "vue-template-compiler": "^2.5.21"
   }
 }

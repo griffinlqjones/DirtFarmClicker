@@ -1,14 +1,14 @@
 <template>
   <div id="hud">
-    <h2 class="section-heading">HUD</h2>
+    <h2 class="section-heading">Dashboard</h2>
     <div class="stats">
       <div class="currency">
-        <p>Money: {{ money }} Currency</p>
-        <p>Good Dirt: {{ goodDirt }} / {{ maxGoodDirt }} m<sup>3</sup></p>
-        <p>Staff Cost: {{ laborCost }} money per hour</p>
-        <p>Dirt Production: {{ passiveDirtRate }} dirt per hour</p>
-        <p>Dirt Unit Price: {{ dirtUnitPrice }} money</p>
-        <p>Morality: {{ morality }} thetans</p>
+        <p><span class="stat">Money:</span> {{ money }} Currency</p>
+        <p><span class="stat">Good Dirt:</span> {{ goodDirt }} / {{ maxGoodDirt }} m<sup>3</sup></p>
+        <p><span class="stat">Staff Cost:</span> {{ laborCost }} money per hour</p>
+        <p><span class="stat">Dirt Production:</span> {{ passiveDirtRate }} dirt per hour</p>
+        <p><span class="stat">Dirt Unit Price:</span> {{ dirtUnitPrice }} money</p>
+        <p><span class="stat">Morality:</span> {{ morality }} thetans</p>
       </div>
       <div class="staff" v-if="hiredStaff.length > 0">
         <h3>Employees:</h3>
@@ -100,7 +100,6 @@ export default {
   width: 100%;
   text-align: center;
   border: 1px solid @border-color;
-  border-radius: 5px;
   display: flex;
   flex-wrap: wrap;
   overflow: hidden;
