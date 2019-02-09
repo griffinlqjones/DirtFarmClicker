@@ -6,7 +6,49 @@ Ideas:
 */
 // prettier-ignore
 let upgradeList = [
-  /* Staff upgrades */
+  /* Click Production Upgrades */
+  {
+    name: "Dirt Farming Supplies?",
+    type: "clickProduction",
+    lockedDescription: "Any good dirt farm requires some kind of initial investment. Grandma gave you 100 dollars to get started so get out there and THROW SOME MONEY AT THE PROBLEM!",
+    unlockedDescription: "You weren't really sure what you needed so you uncritically purchased any suggestions provided by the sales rep at home depot and donated a few dollars to their charity of choice.",
+    available: true,
+    owned: false,
+    aquisitionCost: 93,
+    acquisitionCurrency: "money",
+    intervalCost: 0,
+    count: 0,
+    capacity: 0,
+    value: 1,
+    repurchaseable: false,
+    condition: (state) => {
+      return state.money > 100 ? true : false;
+    },
+    morality: 0
+  },
+  {
+    name: "Performance-Enhancing, Perfectly Legal \"Energy Drink\"",
+    type: "clickProduction",
+    lockedDescription: "Try this totally above board, definitely not made of questionable materials, beverage and tackle your work like a champion!",
+    unlockedDescription: "You are now fueled by the raw power of clickbait superfruit and bull testosterone. Look at you go.",
+    available: false,
+    owned: false,
+    aquisitionCost: 15,
+    acquisitionCurrency: "money",
+    intervalCost: 0,
+    count: 0,
+    capacity: 0,
+    value: 2,
+    repurchaseable: false,
+    condition: (state) => {
+      return (state.money > 20 && state.clickedDirtRate > 0) ? true : false;
+    },
+    morality: 0
+  },
+  /* Staff upgrades
+  capacity: In the future, this field will be for the amount of hours the worker can work in a given 24 hour period.
+  value: production per tick
+  */
   {
     name: "Child Laborers",
     type: "staff",
@@ -22,8 +64,7 @@ let upgradeList = [
     value: 2,
     repurchaseable: true,
     condition: function (state) {
-      // state is undefined for some reason
-      return state.goodDirt >= 10 ? true : false;
+      return state.maxGoodDirt > 30 ? true : false;
     },
     morality: -5
   },
@@ -36,13 +77,51 @@ let upgradeList = [
     owned: false,
     aquisitionCost: 0,
     acquisitionCurrency: "money",
-    intervalCost: 8,
+    intervalCost: 7,
     count: 0,
     capacity: 6,
-    value: 9,
+    value: 10,
     repurchaseable: true,
     condition: (state) => {
-      return state.money >= 2000 ? true : false;
+      return state.money >= 600 ? true : false;
+    },
+    morality: 0
+  },
+  {
+    name: "Professional Adults",
+    type: "staff",
+    lockedDescription: "More expensive to employ than teenagers and children, but more capable workers, more interesting conversationalists, and need to be able to pay their bills.",
+    unlockedDescription: "",
+    available: false,
+    owned: false,
+    aquisitionCost: 0,
+    acquisitionCurrency: "money",
+    intervalCost: 22,
+    count: 0,
+    capacity: 8,
+    value: 50,
+    repurchaseable: true,
+    condition: (state) => {
+      return state.money >= 10000 ? true : false;
+    },
+    morality: 0
+  },
+  {
+    name: "Automaton FarmBots",
+    type: "staff",
+    lockedDescription: "You don't have to pay robots, they don't have dreams or families to feed. Now if only there was some way to automate the technicians...",
+    unlockedDescription: "You've taken the first step towards a Star Trek utopia by purchasing robots so your human employees can focus on pursuing their passions!",
+    available: false,
+    owned: false,
+    aquisitionCost: 20000,
+    acquisitionCurrency: "money",
+    intervalCost: 1,
+    count: 0,
+    capacity: 6,
+    value: 40,
+    repurchaseable: true,
+    condition: (state) => {
+      return state.money >= 50000 ? true : false;
     },
     morality: 0
   },
@@ -63,7 +142,7 @@ let upgradeList = [
     value: 0,
     repurchaseable: false,
     condition: (state) => {
-      return state.goodDirt >= 20 ? true : false;
+      return state.maxGoodDirt >= 20 ? true : false;
     },
     morality: 0
   },
@@ -71,7 +150,7 @@ let upgradeList = [
     name: "Bucket",
     type: "shippingContainer",
     lockedDescription: "In order to sell dirt effectively you need to be able to transport it. Arrange for a bucket supplier.",
-    unlockedDescription: "Buckets can hold 20 liters of dirt",
+    unlockedDescription: "Buckets can hold 20 units of dirt.",
     available: false,
     owned: false,
     aquisitionCost: 50,
@@ -101,15 +180,34 @@ let upgradeList = [
     value: 1000,
     repurchaseable: false,
     condition: (state) => {
-      return state.goodDirt >= 200 ? true : false;
+      return (state.maxGoodDirt >= 200 && state.morality < 30) ? true : false;
     },
     morality: -25
   },
   {
-    name: "Quite A Large Box",
+    name: "Medium Sized Box",
     type: "shippingContainer",
-    lockedDescription: "",
-    unlockedDescription: "",
+    lockedDescription: "Selling dirt in small batches is starting to feel a lot like work. Ship in Medium Sized Boxes and reap all the health benefits.",
+    unlockedDescription: "It's like a small box only bigger.",
+    available: false,
+    owned: false,
+    aquisitionCost: 300,
+    acquisitionCurrency: "money",
+    intervalCost: 3,
+    count: 0,
+    capacity: 100,
+    value: 0,
+    repurchaseable: false,
+    condition: (state) => {
+      return state.maxGoodDirt >= 200 ? true : false;
+    },
+    morality: 0
+  },
+  {
+    name: "Organic Matter Shipping Box",
+    type: "shippingContainer",
+    lockedDescription: "Specifically designed to transport hundreds of dead ladybugs, seeds, and sure, why not soil?",
+    unlockedDescription: "This box improves the overall presentation of your product by preventing your customers from receiving soggy, moldy carboard.",
     available: false,
     owned: false,
     aquisitionCost: 5000,
@@ -117,18 +215,18 @@ let upgradeList = [
     intervalCost: 75,
     count: 0,
     capacity: 1000,
-    value: 0,
+    value: 100,
     repurchaseable: false,
     condition: (state) => {
-      return state.goodDirt >= 500 ? true : false;
+      return state.maxGoodDirt >= 500 ? true : false;
     },
     morality: 0
   },
   {
     name: "Shipping Crate",
     type: "shippingContainer",
-    lockedDescription: "",
-    unlockedDescription: "",
+    lockedDescription: "FedEx just isn't doing it for you anymore. It's time to make like Curtis Mayfield and move on up.",
+    unlockedDescription: "A Crate distinguishes itself from a box through its choice of attire, hairstyle, and bodily decorations because their personalities are essentially identical.",
     available: false,
     owned: false,
     aquisitionCost: 30000,
@@ -139,7 +237,7 @@ let upgradeList = [
     value: 0,
     repurchaseable: false,
     condition: (state) => {
-      return state.goodDirt >= 10000 ? true : false;
+      return state.maxGoodDirt >= 10000 ? true : false;
     },
     morality: 0
   },
@@ -147,7 +245,7 @@ let upgradeList = [
     name: "20ft Ventilated Shipping Container",
     type: "shippingContainer",
     lockedDescription: "Set up a large scale shipping contract. You'll be using the big kid stuff now. Good on ye, m8.",
-    unlockedDescription: "",
+    unlockedDescription: "Ship massive quantities of dirt internationally in the Rolls Royce of containers.",
     available: false,
     owned: false,
     aquisitionCost: 90000,
@@ -155,15 +253,34 @@ let upgradeList = [
     intervalCost: 2300,
     count: 0,
     capacity: 33200,
-    value: 0,
+    value: 200,
     repurchaseable: false,
     condition: (state) => {
-      return state.goodDirt >= 50000 ? true : false;
+      return state.maxGoodDirt >= 50000 ? true : false;
     },
     morality: 0
   },
 
   /* Property Expansions */
+  {
+    name: "Zoning Permit",
+    type: "propertyExpansion",
+    lockedDescription: "Your yard is already too small. Maybe the nice folks on the zoning board will let you remove your trees and shed to increase farming space.",
+    unlockedDescription: "After some bribery, you were granted a permit to clear cut your lawn #forgreatergood. Good thing the bribes were cheap.",
+    available: false,
+    owned: false,
+    aquisitionCost: 200,
+    acquisitionCurrency: "money",
+    intervalCost: 0,
+    count: 0,
+    capacity: 20,
+    value: 0,
+    repurchaseable: false,
+    condition: (state) => {
+      return (state.money > 40 && state.clickedDirtRate > 0) ? true : false;
+    },
+    morality: -5
+  },
   {
     name: "The Vacant Lot Behind Your House",
     type: "propertyExpansion",
@@ -179,7 +296,7 @@ let upgradeList = [
     value: 0,
     repurchaseable: false,
     condition: (state) => {
-      return state.money >= 200 ? true : false;
+      return (state.money >= 200 && state.maxGoodDirt > 30) ? true : false;
     },
     morality: 5
   },
@@ -217,7 +334,7 @@ let upgradeList = [
     value: 0,
     repurchaseable: true,
     condition: (state) => {
-      return state.money >= 5000 ? true : false;
+      return state.money >= 2000 ? true : false;
     },
     morality: 5
   },
@@ -228,7 +345,7 @@ let upgradeList = [
     unlockedDescription: "Land reclaimed by nature has now been reclaimed by you. Good job, Dirt Farmer.",
     available: false,
     owned: false,
-    aquisitionCost: 3000,
+    aquisitionCost: 10000,
     acquisitionCurrency: "money",
     intervalCost: 0,
     count: 0,
@@ -236,7 +353,7 @@ let upgradeList = [
     value: 0,
     repurchaseable: true,
     condition: (state) => {
-      return state.dirt >= 5000 ? true : false;
+      return state.money >= 35000 ? true : false;
     },
     morality: 35
   },
@@ -247,15 +364,15 @@ let upgradeList = [
     unlockedDescription: "Your shipping costs have been reduced, but your rent has become substantial.",
     available: false,
     owned: false,
-    aquisitionCost: 300000,
+    aquisitionCost: 50000,
     acquisitionCurrency: "money",
     intervalCost: 0,
     count: 0,
-    capacity: 10000,
+    capacity: 15000,
     value: 0,
     repurchaseable: true,
     condition: (state) => {
-      return state.dirt >= 20000 ? true : false;
+      return state.maxGoodDirt >= 20000 ? true : false;
     },
     morality: -20
   },
@@ -276,7 +393,7 @@ let upgradeList = [
     value: 1,
     repurchaseable: false,
     condition: (state) => {
-      return state.morality < -10 ? true : false;
+      return state.morality < 0 ? true : false;
     },
     morality: 0
   },
@@ -298,7 +415,8 @@ let upgradeList = [
       return state.maxGoodDirt > 1000 ? true : false;
     },
     morality: 50
-  }
+  },
+
 ];
 /* This is the object template. Obey and ye shall be rewarded in the pirate afterlife. Yarr.
 {

@@ -7,7 +7,7 @@ let initializer = {
   maxGoodDirt: 30,
   /* dirt rate represents amount of dirt per square meter in cubed meters. passiveDirtRate of 0.1 represents 0.1m^3 per m^2 of property size.*/
   passiveDirtRate: 0,
-  clickedDirtRate: 1,
+  clickedDirtRate: 0,
   laborCost: 0,
   dirtUnitPrice: 1,
   money: 100,

@@ -1,10 +1,13 @@
 <template>
   <div id="containers-panel">
-    <button class="container-card" v-for="(container, index) in shippingContainers" :key="index" @click="sellDirt(container)">
-      <h3>{{container.name}}</h3>
-      <p>-{{container.capacity}} Good Dirt</p>
-      <p>+{{container.capacity * dirtUnitPrice - container.intervalCost}} Currency</p>
-    </button>
+    <h3 class="stat heading">Sell</h3>
+    <div class="containers-wrapper">
+      <button class="container-card" v-for="(container, index) in shippingContainers" :key="index" @click="sellDirt(container)">
+        <h3>{{container.name}}</h3>
+        <p>-{{container.capacity}} Good Dirt</p>
+        <p>+{{calcProfit(container)}} Currency</p>
+      </button>
+    </div>
   </div>
 </template>
 
@@ -25,7 +28,7 @@ export default {
   },
   computed: {
     ...mapState(["dirtUnitPrice"]),
-    ...mapGetters(["shippingContainers"])
+    ...mapGetters(["shippingContainers", "calcProfit"])
   }
 };
 </script>
@@ -38,6 +41,19 @@ export default {
 #containers-panel {
   width: 100%;
   display: flex;
+  flex-wrap: wrap;
+  border-width: 1px 0px;
+  border-style: solid;
+  border-color: @border-color;
+
+  .heading {
+    width: 100%;
+    margin: 0;
+  }
+}
+
+.containers-wrapper {
+  width: 100%;
   overflow-x: scroll;
 }
 

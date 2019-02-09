@@ -8,6 +8,9 @@
         <p><span class="stat">Shipping Cost:</span> {{upgrade.intervalCost}} cubic dollars per shipment</p>
         <p><span class="stat">Ships:</span> {{upgrade.capacity}} units of dirt per shipment</p>
       </template>
+      <template v-else-if="upgrade.type == 'clickProduction'">
+        <p><span class="stat">Produces:</span> {{ upgrade.value }} units of dirt per click {{upgrade.repurchaseable ? "(stackable)" : ""}}</p>
+      </template>
       <template v-else-if="upgrade.type == 'staff'">
         <p><span class="stat">Wage:</span> {{upgrade.intervalCost}} money/hr</p>
         <!-- <p>Daily Hours: {{upgrade.capacity}}</p> -->
@@ -55,16 +58,25 @@ export default {
   border: 1px solid @border-color;
   width: 100%;
   display: flex;
+  justify-content: space-between;
   overflow: hidden;
   flex-wrap: wrap;
 }
 
 .upgrade-card {
   padding: 10px;
-  margin: 5px;
+  margin-bottom: 5px;
   background-color: #beeeef;
   color: #01031f;
   border: 4px solid @border-color;
+  width: 100%;
+
+  @media screen and (min-width: 600px) {
+    width: 49%;
+  }
+  @media screen and (min-width: 900px) {
+    width: 32%;
+  }
 }
 
 h3 {

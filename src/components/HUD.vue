@@ -6,7 +6,8 @@
         <p><span class="stat">Money:</span> {{ money }} Currency</p>
         <p><span class="stat">Good Dirt:</span> {{ goodDirt }} / {{ maxGoodDirt }} m<sup>3</sup></p>
         <p><span class="stat">Staff Cost:</span> {{ laborCost }} money per hour</p>
-        <p><span class="stat">Dirt Production:</span> {{ passiveDirtRate }} dirt per hour</p>
+        <p><span class="stat">Personal Dirt Production:</span> {{ clickedDirtRate }} dirt per click</p>
+        <p><span class="stat">Staff Dirt Production:</span> {{ passiveDirtRate }} dirt per hour</p>
         <p><span class="stat">Dirt Unit Price:</span> {{ dirtUnitPrice }} money</p>
         <p><span class="stat">Morality:</span> {{ morality }} thetans</p>
       </div>
@@ -14,7 +15,7 @@
         <h3>Employees:</h3>
         <ul>
           <li v-for="(employee, index) in hiredStaff" :key="index">
-            <p class="stat">{{employee.name}}: {{employee.count}}</p>
+            <p><span class="stat">{{employee.name}}:</span> {{employee.count}}</p>
             <button class="remove-button" @click="dismissEmployee(employee)">
               Dismiss 1
             </button>
@@ -26,6 +27,7 @@
       <button type="button" name="button" @click="startTime">Start</button>
       <button type="button" name="button" @click="stopTime">Stop</button>
       <button type="button" name="button" @click="unlockables">Check for unlocked things</button>
+      <p class="upgrade-alert" v-if="this.upgradeUnlockAlertDisplay">NEW UPGRADES AVAILABLE</p>
     </div>
     <!-- <button type="button" name="button" @click="test">Test</button> -->
     <!-- <button type="button" name="button" @click="buy">Buy a thing ($20)</button> -->
@@ -42,9 +44,6 @@ import Container from "@/components/Container.vue";
 
 export default {
   name: "HUD",
-  data() {
-    return {};
-  },
   methods: {
     ...mapActions([
       "startTimer",
@@ -76,12 +75,14 @@ export default {
       "money",
       "goodDirt",
       "maxGoodDirt",
-      "passiveDirtRate"
+      "passiveDirtRate",
+      "clickedDirtRate",
+      "upgradeUnlockAlertDisplay"
     ]),
     ...mapGetters([
       "hiredStaff",
       "laborCostPerTick",
-      "dirtProductionPerTick",
+      "dirtPerTick",
       "getMorality"
     ])
   },
@@ -127,6 +128,17 @@ export default {
     background-color: @destructive-red;
     color: #ffffff;
   }
+}
+
+.upgrade-alert {
+  text-align: center;
+  color: #ffffff;
+  background-color: @destructive-red;
+  box-shadow: 0 0 5px @destructive-red;
+  padding: 5px;
+  border-radius: 5px;
+  white-space: nowrap;
+  width: min-content;
 }
 
 ol {
