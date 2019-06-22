@@ -24,15 +24,15 @@
     <router-link to="/dirt-farm" class="start-button"><span @click="startGame">Start Farming</span></router-link>
     <router-view/>
     <div class="buttons-wrapper">
-      <button @click="test">Test</button>
-      <button @click="saveGame">Save Game</button>
-      <button @click="loadGame">Load Game</button>
+      <!-- <button @click="test">Test</button> -->
+      <!-- <button @click="saveGame">Save Game</button> -->
+      <!-- <button @click="loadGame">Load Game</button> -->
       <button>This Button Does NOTHING!</button>
-      <button class="delete-button" @click="deleteGame">Delete Game</button>
+      <!-- <button class="delete-button" @click="deleteGame">Delete Game</button> -->
     </div>
-    <div class="response-data">
+    <!-- <div class="response-data">
       <code>{{userData}}</code>
-    </div>
+    </div> -->
   </div>
 </template>
 
