@@ -8,7 +8,7 @@
 - A Rags to Riches Tale!
 - A Revenge Subplot!
 
-### Potential Future Features:
+### Potential Future Features to be Featured in this Feature:
 - Serviceable SVG Assets!
 - Quaint Animations!
 - A Minimalist Score Composed by a Someone Pretending to be a Fragile Man Named Philip!
