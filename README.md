@@ -1,34 +1,16 @@
-# demo-dirt-farm
+# Dirt Farm
+## An Incremental Clicker Game About Farming Dirt
 
-## Project setup
-```
-npm install
-```
+### Featuring:
+- A Stunning Dirt Texture!
+- Black Comedy!
+- Commentary on the Displacement of Human Labor by the Rise of Artifical Intelligence!
+- A Rags to Riches Tale!
+- A Revenge Subplot!
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+### Potential Future Features to be Featured in this Feature:
+- Serviceable SVG Assets!
+- Quaint Animations!
+- A Minimalist Score Composed by a Someone Pretending to be a Fragile Man Named Philip!
 
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Run your unit tests
-```
-npm run test:unit
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## Play it HERE: https://griffinlqjones.github.io/DirtFarmClicker/
