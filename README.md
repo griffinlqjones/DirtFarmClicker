@@ -13,4 +13,4 @@
 - Quaint Animations!
 - A Minimalist Score Composed by a Someone Pretending to be a Fragile Man Named Philip!
 
-## Play it HERE: https://griffinlqjones.github.io/DirtFarmClicker/
+## Play it HERE: https://griffinlqjones.github.io/dirt-farm-clicker/
